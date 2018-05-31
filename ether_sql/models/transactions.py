@@ -68,6 +68,7 @@ class Transactions(base):
         :param datetime iso_timestamp: timestamp when the block containing the transaction was mined
         :param int block_number: block number of the block where this transaction was included
         """
+        logger.debug('{}'.format(transaction_data['nonce']))
         transaction = cls(block_number=block_number,
                           nonce=to_int(transaction_data['nonce']),
                           transaction_hash=to_hex(transaction_data['hash']),

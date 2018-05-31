@@ -74,7 +74,7 @@ def add_block_number(block_number, ether_sql_session):
 
     transaction_list = block_data['transactions']
     # loop to get the transaction, receipts, logs and traces of the block
-    for transaction_data, index in enumerate(transaction_list):
+    for index, transaction_data in enumerate(transaction_list):
         transaction = Transactions.add_transaction(transaction_data,
                                                    block_number=block_number,
                                                    iso_timestamp=iso_timestamp)
@@ -101,6 +101,8 @@ def add_block_number(block_number, ether_sql_session):
             dict_trace_list = trace_list[index]['trace']
             for dict_trace in dict_trace_list:
                 trace = Traces.add_trace(dict_trace,
+                                         transaction_hash=transaction.transaction_hash,
+                                         transaction_index=index,
                                          block_number=block_number,
                                          timestamp=iso_timestamp)
             # added the trace in the db session
