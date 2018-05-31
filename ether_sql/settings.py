@@ -22,6 +22,8 @@ class DefaultSettings():
     # Tables to parse
     # Use this option to parse traces, needs parity with cli --tracing=on
     PARSE_TRACE = False
+    # Use this option to parse stateDiff, needs parity with cli --pruning=archive
+    PARSE_STATE_DIFF = True
 
 
 class PersonalInfuraSettings(DefaultSettings):
@@ -33,6 +35,7 @@ class PersonalInfuraSettings(DefaultSettings):
 class PersonalParitySettings(DefaultSettings):
     NODE_TYPE = "Parity"
     PARSE_TRACE = True
+    PARSE_STATE_DIFF = True
 
 
 class PersonalGethSettings(DefaultSettings):

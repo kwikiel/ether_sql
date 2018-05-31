@@ -1,7 +1,6 @@
 from datetime import datetime
 import logging
 from web3.utils.encoding import to_int, to_hex
-
 from ether_sql.models import (
     Blocks,
     Transactions,
@@ -9,6 +8,7 @@ from ether_sql.models import (
     Receipts,
     Logs,
     Traces,
+    StateDiff,
 )
 
 logger = logging.getLogger(__name__)
@@ -52,42 +52,71 @@ def add_block_number(block_number, ether_sql_session):
     iso_timestamp = datetime.utcfromtimestamp(timestamp).isoformat()
     block = Blocks.add_block(block_data=block_data,
                              iso_timestamp=iso_timestamp)
-    ether_sql_session.db_session.add(block)  # added the block data in the db session
+    # added the block data in the db session
+    ether_sql_session.db_session.add(block)
 
-    logger.debug('Reached this spot')
+    if ether_sql_session.settings.PARSE_TRACE and \
+       ether_sql_session.settings.PARSE_STATE_DIFF:
+        trace_list = ether_sql_session.w3.parity.\
+                     traceReplayBlockTransactions(block_number,
+                                                  mode=['trace', 'stateDiff'])
+    else:
+        if ether_sql_session.settings.PARSE_TRACE:
+            trace_list = ether_sql_session.w3.parity.\
+                         traceReplayBlockTransactions(block_number,
+                                                      mode=['trace'])
+        elif ether_sql_session.settings.PARSE_STATE_DIFF:
+            trace_list = ether_sql_session.w3.parity.\
+                         traceReplayBlockTransactions(block_number,
+                                                      mode=['stateDiff'])
+        else:
+            trace_list = []
+
     transaction_list = block_data['transactions']
     # loop to get the transaction, receipts, logs and traces of the block
-    for transaction_data in transaction_list:
+    for transaction_data, index in enumerate(transaction_list):
         transaction = Transactions.add_transaction(transaction_data,
                                                    block_number=block_number,
                                                    iso_timestamp=iso_timestamp)
         # added the transaction in the db session
         ether_sql_session.db_session.add(transaction)
 
+        # adding receipt data
         receipt_data = ether_sql_session.w3.eth.getTransactionReceipt(
                                     transaction_data['hash'])
         receipt = Receipts.add_receipt(receipt_data,
                                        block_number=block_number,
                                        timestamp=iso_timestamp)
-
-        ether_sql_session.db_session.add(receipt)  # added the receipt in the database
+        ether_sql_session.db_session.add(receipt)
 
         logs_list = receipt_data['logs']
         for dict_log in logs_list:
             log = Logs.add_log(dict_log, block_number=block_number,
                                iso_timestamp=iso_timestamp)
-            ether_sql_session.db_session.add(log)  # adding the log in db session
+            # adding the log in db session
+            ether_sql_session.db_session.add(log)
 
+        # adding traces
         if ether_sql_session.settings.PARSE_TRACE:
-            dict_trace_list = ether_sql_session.w3.parity.traceTransaction(
-                                           to_hex(transaction_data['hash']))
-            if dict_trace_list is not None:
-                for dict_trace in dict_trace_list:
-                    trace = Traces.add_trace(dict_trace,
-                                             block_number=block_number,
-                                             timestamp=iso_timestamp)
-                    ether_sql_session.db_session.add(trace)  # added the trace in the db session
+            dict_trace_list = trace_list[index]['trace']
+            for dict_trace in dict_trace_list:
+                trace = Traces.add_trace(dict_trace,
+                                         block_number=block_number,
+                                         timestamp=iso_timestamp)
+            # added the trace in the db session
+            ether_sql_session.db_session.add(trace)
 
+        """
+        # adding stateDiff
+        if ether_sql_session.settings.PARSE_STATE_DIFF:
+            dict_state_list = trace_list[index]['stateDiff']
+            for dict_state in dict_state_list:
+                stateDiff = StateDiff.add_stateDiff(dict_state,
+                                                    transaction['hash'],
+                                                    block_number,
+                                                    iso_timestamp)
+        """
+    # getting uncle data
     uncle_list = block_data['uncles']
     for i in range(0, len(uncle_list)):
         # Unfortunately there is no command eth_getUncleByHash
