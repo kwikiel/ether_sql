@@ -107,3 +107,16 @@ class Logs(base):
         logger.debug("tx_hash: {}, log_index: {}".format(log.transaction_hash, log.log_index))
 
         return log
+
+    @classmethod
+    def add_log_list(cls, session, log_list, block_number, timestamp):
+        """
+        Adds a list of logs in the session
+        """
+        for log_data in log_list:
+            log = cls.add_log(log_data=log_data,
+                              block_number=block_number,
+                              iso_timestamp=timestamp)
+            # adding the log in db session
+            session.db_session.add(log)
+        return session
