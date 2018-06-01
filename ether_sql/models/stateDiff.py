@@ -120,7 +120,7 @@ class StateDiff(base):
                                             block_number=block_number,
                                             timestamp=timestamp)
             session.db_session.add(state_diff)
-            session.flush()
+            session.db_session.flush()
 
             if state_diff_dict[address]['storage'] is not {}:
                 session = StorageDiff.\
