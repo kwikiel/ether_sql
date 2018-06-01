@@ -25,7 +25,7 @@ class StorageDiff(base):
                               ForeignKey('transactions.transaction_hash'),
                               index=True)
     transaction_index = Column(Numeric, nullable=True)
-    state_diff_id = Column(Integer, ForeignKey('state_diff.id'))
+    state_diff_id = Column(Integer, ForeignKey('state_diff.id'), nullable=False)
     address = Column(String(42), index=True, nullable=False)
     position = Column(String(66), nullable=False)
     storage_from = Column(String(66), nullable=True)
@@ -47,7 +47,7 @@ class StorageDiff(base):
     @classmethod
     def add_storage_diff(cls, storage_diff_row, position, address,
                          transaction_hash, transaction_index, block_number,
-                         timestamp):
+                         timestamp, state_diff_id):
 
         assert isinstance(storage_diff_row, dict)
         key = list(storage_diff_row)
@@ -59,19 +59,21 @@ class StorageDiff(base):
                            transaction_index=transaction_index,
                            address=address,
                            position=position,
-                           storage_from=storage_diff_row['from'],
-                           storage_to=storage_diff_row['to'])
+                           state_diff_id=state_diff_id,
+                           storage_from=storage_diff_row['*']['from'],
+                           storage_to=storage_diff_row['*']['to'])
         return storage_diff
 
     @classmethod
     def add_storage_diff_dict(cls, session, storage_diff_dict, address,
                               transaction_hash, transaction_index, block_number,
-                              timestamp):
+                              timestamp, state_diff_id):
         assert isinstance(storage_diff_dict, dict)
         for position in storage_diff_dict:
             storage_diff = cls.add_storage_diff(storage_diff_row=storage_diff_dict[position],
                                                 position=position,
                                                 address=address,
+                                                state_diff_id=state_diff_id,
                                                 transaction_hash=transaction_hash,
                                                 transaction_index=transaction_index,
                                                 block_number=block_number,

@@ -31,7 +31,7 @@ class StateDiff(base):
     """
 
     __tablename__ = 'state_diff'
-    id = Column(Integer, primary_key=True)
+    id = Column(Integer, primary_key=True, autoincrement=True)
     block_number = Column(Numeric, ForeignKey('blocks.block_number'))
     timestamp = Column(TIMESTAMP)
     # nullable because some state changes also occour because of miner rewards
@@ -113,21 +113,23 @@ class StateDiff(base):
     def add_state_diff_dict(cls, session, state_diff_dict, transaction_hash,
                             transaction_index, block_number, timestamp):
         for address in state_diff_dict:
+            state_diff = cls.add_state_diff(state_diff_row=state_diff_dict[address],
+                                            address=address,
+                                            transaction_hash=transaction_hash,
+                                            transaction_index=transaction_index,
+                                            block_number=block_number,
+                                            timestamp=timestamp)
+            session.db_session.add(state_diff)
+            session.flush()
+
             if state_diff_dict[address]['storage'] is not {}:
                 session = StorageDiff.\
                     add_storage_diff_dict(session=session,
                                           storage_diff_dict=state_diff_dict[address]['storage'],
+                                          state_diff_id=state_diff.id,
                                           address=address,
                                           transaction_hash=transaction_hash,
                                           transaction_index=transaction_index,
                                           block_number=block_number,
                                           timestamp=timestamp)
-            else:
-                state_diff = cls.add_state_diff(state_diff_row=state_diff_dict[address],
-                                                address=address,
-                                                transaction_hash=transaction_hash,
-                                                transaction_index=transaction_index,
-                                                block_number=block_number,
-                                                timestamp=timestamp)
-            session.db_session.add(state_diff)
         return session
