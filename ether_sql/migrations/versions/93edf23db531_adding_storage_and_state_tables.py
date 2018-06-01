@@ -1,8 +1,8 @@
-"""added state & storage diff
+"""adding storage and state tables
 
-Revision ID: c43d937d367e
+Revision ID: 93edf23db531
 Revises: 10f48d555d4a
-Create Date: 2018-06-01 14:04:51.448803
+Create Date: 2018-06-01 15:54:44.903464
 
 """
 from alembic import op
@@ -10,7 +10,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = 'c43d937d367e'
+revision = '93edf23db531'
 down_revision = '10f48d555d4a'
 branch_labels = None
 depends_on = None
@@ -43,7 +43,7 @@ def upgrade():
     sa.Column('timestamp', sa.TIMESTAMP(), nullable=True),
     sa.Column('transaction_hash', sa.String(length=66), nullable=True),
     sa.Column('transaction_index', sa.Numeric(), nullable=True),
-    sa.Column('state_diff_id', sa.Integer(), nullable=True),
+    sa.Column('state_diff_id', sa.Integer(), nullable=False),
     sa.Column('address', sa.String(length=42), nullable=False),
     sa.Column('position', sa.String(length=66), nullable=False),
     sa.Column('storage_from', sa.String(length=66), nullable=True),
