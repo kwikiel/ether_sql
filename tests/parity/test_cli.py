@@ -8,6 +8,8 @@ from ether_sql.models import (
     Uncles,
     Logs,
     Traces,
+    StateDiff,
+    StorageDiff,
 )
 
 
@@ -21,7 +23,9 @@ class TestEmptyTables():
                                    expected_transaction_properties,
                                    expected_receipt_properties,
                                    expected_log_properties,
-                                   expected_trace_properties,):
+                                   expected_trace_properties,
+                                   expected_state_diff_properties,
+                                   expected_storage_diff_properties,):
 
         # first block with a log and an uncle
         runner = CliRunner()
@@ -52,6 +56,16 @@ class TestEmptyTables():
         # comparing values of traces
         trace_properties_in_sql = parity_session.db_session.query(Traces).first().to_dict()
         assert trace_properties_in_sql == expected_trace_properties
+
+        # comparing values if state diffs
+        state_diff_property_in_sql = parity_session.db_session.query(StateDiff).all()
+        for i in range(0, len(state_diff_property_in_sql)):
+            assert state_diff_property_in_sql[i].to_dict() == expected_state_diff_properties[i]
+
+        # comparing values of storage_diffs
+        storage_diff_property_in_sql = parity_session.db_session.query(StorageDiff).all()
+        for i in range(0, len(storage_diff_property_in_sql)):
+            assert storage_diff_property_in_sql[i].to_dict() == expected_storage_diff_properties[i]
 
         parity_session.db_session.close()
 
