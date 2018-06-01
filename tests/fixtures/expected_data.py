@@ -104,55 +104,56 @@ def expected_trace_properties():
 
 @pytest.fixture()
 def expected_state_diff_properties():
-    expected_state_diff_properties[0] = {'block_number': Decimal('56160'),
-                                         'timestamp': datetime.datetime(2015, 8, 9, 1, 14, 50),
-                                         'transaction_hash': '0x8696c8669e07ae7e4ceef43945fe9c78252ab76f1a3c16658a04a644b8329736',
-                                         'transaction_index': Decimal('0'),
-                                         'address': '0x3f98e477a361f777da14611a7e419a75fd238b6b',
-                                         'balance_from': Decimal('373225062580329529922'),
-                                         'balance_to': Decimal('373227934395239448282'),
-                                         'code_from': None,
-                                         'code_to': None}
-    expected_state_diff_properties[1] = {'block_number': Decimal('56160'),
-                                         'timestamp': datetime.datetime(2015, 8, 9, 1, 14, 50),
-                                         'transaction_hash': '0x8696c8669e07ae7e4ceef43945fe9c78252ab76f1a3c16658a04a644b8329736',
-                                         'transaction_index': Decimal('0'),
-                                         'address': '0x9b2c46642caf6b936dc0633da521f1e946b7e18f',
-                                         'balance_from': Decimal('1463548993538340074'),
-                                         'balance_to': Decimal('1460677178628421714'),
-                                         'code_from': None,
-                                         'code_to': None}
-    expected_state_diff_properties[2] = {'block_number': Decimal('56160'),
-                                         'timestamp': datetime.datetime(2015, 8, 9, 1, 14, 50),
-                                         'transaction_hash': '0x8696c8669e07ae7e4ceef43945fe9c78252ab76f1a3c16658a04a644b8329736',
-                                         'transaction_index': Decimal('0'),
-                                         'address': '0xdbb576b5b0e7bf0570a981aab3ad39a0c5f19eb1',
-                                         'balance_from': None,
-                                         'balance_to': None,
-                                         'code_from': None,
-                                         'code_to': None}
-    return expected_state_diff_properties
+    expected = []
+    expected.append({'block_number': Decimal('56160'),
+                     'timestamp': datetime.datetime(2015, 8, 9, 1, 14, 50),
+                     'transaction_hash': '0x8696c8669e07ae7e4ceef43945fe9c78252ab76f1a3c16658a04a644b8329736',
+                     'transaction_index': Decimal('0'),
+                     'address': '0x3f98e477a361f777da14611a7e419a75fd238b6b',
+                     'balance_from': Decimal('373225062580329529922'),
+                     'balance_to': Decimal('373227934395239448282'),
+                     'code_from': None,
+                     'code_to': None})
+    expected.append({'block_number': Decimal('56160'),
+                     'timestamp': datetime.datetime(2015, 8, 9, 1, 14, 50),
+                     'transaction_hash': '0x8696c8669e07ae7e4ceef43945fe9c78252ab76f1a3c16658a04a644b8329736',
+                     'transaction_index': Decimal('0'),
+                     'address': '0x9b2c46642caf6b936dc0633da521f1e946b7e18f',
+                     'balance_from': Decimal('1463548993538340074'),
+                     'balance_to': Decimal('1460677178628421714'),
+                     'code_from': None,
+                     'code_to': None})
+    expected.append({'block_number': Decimal('56160'),
+                     'timestamp': datetime.datetime(2015, 8, 9, 1, 14, 50),
+                     'transaction_hash': '0x8696c8669e07ae7e4ceef43945fe9c78252ab76f1a3c16658a04a644b8329736',
+                     'transaction_index': Decimal('0'),
+                     'address': '0xdbb576b5b0e7bf0570a981aab3ad39a0c5f19eb1',
+                     'balance_from': None,
+                     'balance_to': None,
+                     'code_from': None,
+                     'code_to': None})
+    return expected
 
 
 @pytest.fixture()
 def expected_storage_diff_properties():
-    expected_storage_diff_properties[0] = {'block_number': Decimal('56160'),
-                                           'timestamp': datetime.datetime(2015, 8, 9, 1, 14, 50),
-                                           'transaction_hash': '0x8696c8669e07ae7e4ceef43945fe9c78252ab76f1a3c16658a04a644b8329736',
-                                           'transaction_index': Decimal('0'),
-                                           'state_diff_id': 3,
-                                           'address': '0xdbb576b5b0e7bf0570a981aab3ad39a0c5f19eb1',
-                                           'position': '0x176f28426fded76854a5a0a4c618c35554983e8a7e93abf0310b736ef509d29e',
-                                           'storage_from': '0x0000000000000000000000000000000000000000000000000000000000000000',
-                                           'storage_to': '0x00000000000000000000000000000000000000000000000000000000000003e8'}
-
-    expected_storage_diff_properties[1] = {'block_number': Decimal('56160'),
-                                           'timestamp': datetime.datetime(2015, 8, 9, 1, 14, 50),
-                                           'transaction_hash': '0x8696c8669e07ae7e4ceef43945fe9c78252ab76f1a3c16658a04a644b8329736',
-                                           'transaction_index': Decimal('0'),
-                                           'state_diff_id': 3,
-                                           'address': '0xdbb576b5b0e7bf0570a981aab3ad39a0c5f19eb1',
-                                           'position': '0x8627c64ae2959fac7fcf3b7380ff296fe9a6472ae59b0a5fd22f1e5b88614aea',
-                                           'storage_from': '0x0000000000000000000000000000000000000000000000000000000000002710',
-                                           'storage_to': '0x0000000000000000000000000000000000000000000000000000000000002328'}
-    return expected_storage_diff_properties
+    expected = []
+    expected.append({'block_number': Decimal('56160'),
+                     'timestamp': datetime.datetime(2015, 8, 9, 1, 14, 50),
+                     'transaction_hash': '0x8696c8669e07ae7e4ceef43945fe9c78252ab76f1a3c16658a04a644b8329736',
+                     'transaction_index': Decimal('0'),
+                     'state_diff_id': 3,
+                     'address': '0xdbb576b5b0e7bf0570a981aab3ad39a0c5f19eb1',
+                     'position': '0x176f28426fded76854a5a0a4c618c35554983e8a7e93abf0310b736ef509d29e',
+                     'storage_from': '0x0000000000000000000000000000000000000000000000000000000000000000',
+                     'storage_to': '0x00000000000000000000000000000000000000000000000000000000000003e8'})
+    expected.append({'block_number': Decimal('56160'),
+                     'timestamp': datetime.datetime(2015, 8, 9, 1, 14, 50),
+                     'transaction_hash': '0x8696c8669e07ae7e4ceef43945fe9c78252ab76f1a3c16658a04a644b8329736',
+                     'transaction_index': Decimal('0'),
+                     'state_diff_id': 3,
+                     'address': '0xdbb576b5b0e7bf0570a981aab3ad39a0c5f19eb1',
+                     'position': '0x8627c64ae2959fac7fcf3b7380ff296fe9a6472ae59b0a5fd22f1e5b88614aea',
+                     'storage_from': '0x0000000000000000000000000000000000000000000000000000000000002710',
+                     'storage_to': '0x0000000000000000000000000000000000000000000000000000000000002328'})
+    return expected
