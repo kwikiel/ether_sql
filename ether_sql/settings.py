@@ -23,7 +23,7 @@ class DefaultSettings():
     # Use this option to parse traces, needs parity with cli --tracing=on
     PARSE_TRACE = False
     # Use this option to parse stateDiff, needs parity with cli --pruning=archive
-    PARSE_STATE_DIFF = True
+    PARSE_STATE_DIFF = False
 
 
 class PersonalInfuraSettings(DefaultSettings):
