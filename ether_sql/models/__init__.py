@@ -12,3 +12,4 @@ from ether_sql.models.receipts import Receipts
 from ether_sql.models.logs import Logs
 from ether_sql.models.traces import Traces
 from ether_sql.models.stateDiff import StateDiff
+from ether_sql.models.storageDiff import StorageDiff

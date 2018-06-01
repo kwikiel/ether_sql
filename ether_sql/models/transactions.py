@@ -21,8 +21,8 @@ class Transactions(base):
     :param str receiver: Address of the recepient of this transaction, null if transaction creates a smart-contract
     :param str data: Unlimited size text specifying input data of message call or code of a contract create
     :param int gas_price: Number of wei to pay the miner per unit of gas
-    :param int timestamp: Unix time at the at this transactions blocks
-    :param datetime transaction_index: Position of this transaction in the transaction list of this block
+    :param datetime timestamp: Unix time at the at this transactions blocks
+    :param int transaction_index: Position of this transaction in the transaction list of this block
 
     """
     __tablename__ = 'transactions'
@@ -40,6 +40,7 @@ class Transactions(base):
     receipt = relationship('Receipts', backref='transactions')
     logs = relationship('Logs', backref='transactions')
     traces = relationship('Traces', backref='transactions')
+    state_diff = relationship('StateDiff', backref='transactions')
 
     def to_dict(self):
         return {
