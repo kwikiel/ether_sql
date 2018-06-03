@@ -58,6 +58,8 @@ class StateDiff(base):
             'address': self.address,
             'balance_from': self.balance_from,
             'balance_to': self.balance_to,
+            'nonce_from': self.nonce_from,
+            'nonce_to': self.nonce_to,
             'code_from': self.code_from,
             'code_to': self.code_to,
         }
@@ -66,6 +68,7 @@ class StateDiff(base):
         state_from = None
         state_to = None
 
+        assert len(account_state) == 1
         if isinstance(account_state, dict):
             key = list(account_state)
             if key[0] == '*':
@@ -80,10 +83,17 @@ class StateDiff(base):
                     state_to = account_state['+']
                 else:
                     state_to = hex_to_integer(account_state['+'])
+            elif key[0] == '-':
+                if type == 'code':
+                    state_from = account_state['-']
+                else:
+                    state_from = hex_to_integer(account_state['-'])
             else:
-                logger.error('Unknown key in account state')
+                raise ValueError('Unknown key {} in account state'.format(key))
         elif account_state == '=':
             logger.debug('No change in type'.format(type))
+        else:
+            raise ValueError('Unknown account state {}'.format(account_state))
         return state_from, state_to
 
     @classmethod
