@@ -51,7 +51,14 @@ class StorageDiff(base):
 
         assert isinstance(storage_diff_row, dict)
         key = list(storage_diff_row)
-        assert key[0] == '*'
+        if key[0] == '*':
+            storage_from = storage_diff_row['*']['from'],
+            storage_to = storage_diff_row['*']['to']
+        elif key[0] == '+':
+            storage_from = None
+            storage_to = storage_diff_row['+']
+        else:
+            raise ValueError('Unknown key {}'.format(key))
 
         storage_diff = cls(block_number=block_number,
                            timestamp=timestamp,
@@ -60,8 +67,8 @@ class StorageDiff(base):
                            address=address,
                            position=position,
                            state_diff_id=state_diff_id,
-                           storage_from=storage_diff_row['*']['from'],
-                           storage_to=storage_diff_row['*']['to'])
+                           storage_from=storage_from,
+                           storage_to=storage_to)
         return storage_diff
 
     @classmethod
