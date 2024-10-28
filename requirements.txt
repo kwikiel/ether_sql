@@ -2,7 +2,7 @@
 -e git://github.com/ethereum/web3.py.git@master#egg=web3
 
 # SqlAlchemy
-sqlalchemy==1.2.4
+sqlalchemy==1.2.19
 alembic==0.9.9
 psycopg2-binary==2.7.4
 
